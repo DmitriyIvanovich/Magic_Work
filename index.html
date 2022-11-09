@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #zona{
+            margin-top: 50px;
+            height: 500px;
+            background-color: grey;
+        }
+        #conteiner{
+            position: relative;
+            box-sizing: content-box;
+            
+            width: 620px;
+            height: 220px;
+            padding:10px;
+            top:100px;
+            left:60px;
+            border: 5px dashed red;
+        }
+        #lodingArea{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.356);
+        }
+        .cell{
+            position: absolute;
+            box-sizing: border-box;
+            line-height: 100px;
+            padding: 0px;
+            top: 0px;
+            font-size: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Программа управления РПП</h1>
+    <label><input type="number"> количество ячеек в длину</label>
+    <label><input type="number"> количество ячеек в ширину</label>
+    <div id="zona">
+        <div id="conteiner">
+            <div id="lodingArea"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
