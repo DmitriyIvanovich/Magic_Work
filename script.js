@@ -63,5 +63,5 @@ function Cell(id, group, listSize, parrentBox, color = "red",) {
 let cell_1 = new Cell('URT725L', 'UU2', [CELL_X, CELL_Y], conteiner.lodingArea);
 print(cell_1);
 print(conteiner);
-print("1ы11")
+print("1ы211")
 
