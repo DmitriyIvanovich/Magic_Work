@@ -55,6 +55,7 @@ function Cell(id, group, color = "red") {
     this.DOM.className = 'cell';
     this.parrentBox.DOM.appendChild(this.DOM);
     this.mapPosition = [null, null];    //массив с двумя значениями, n и m 
+    this.activPositioning = false;
 
     !function (elDOM) {
         // установка элемента на стартовое значение
@@ -77,9 +78,10 @@ function Cell(id, group, color = "red") {
         }
     }(this.parrentBox, this.mapPosition, this.id);
 
+    const STEP = 25;
+    const DELTA_TIME = 30;  // задержка шага. влияет на частоту кадров
     this.moveToX = (to) => {
-        const STEP = 40;
-        const DELTA_TIME = 30; // задержка шага. влияет на частоту кадров
+        this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = to;
         const START_POSITION = parseInt(this.DOM.style.left)
@@ -94,7 +96,9 @@ function Cell(id, group, color = "red") {
             let newPosition = parseInt(this.DOM.style.left) + STEP * START_VECTOR;
             let newVector = Math.sign(TARGET_POSITION - newPosition);
 
-            if (newVector == 0 && newVector == 0) {        // завершение функции если обьект у цели и вектор нулевой
+            if (newVector == 0 && newVector == 0) {  // завершение функции если обьект у цели и вектор нулевой
+                this.DOM.style.left = newPosition + 'px';      
+                this.activPositioning = false;
                 return;
             }
 
@@ -104,14 +108,15 @@ function Cell(id, group, color = "red") {
             }
             else {
                 this.DOM.style.left = TARGET_POSITION + 'px';
+                this.activPositioning = false;
+                return;
             }
         }
         nexStep()
     };
 
     this.moveToY = (to) => {
-        const STEP = 40;
-        const DELTA_TIME = 30; // задержка шага. влияет на частоту кадров
+        this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = to;
         const START_POSITION = parseInt(this.DOM.style.top)
@@ -127,6 +132,8 @@ function Cell(id, group, color = "red") {
             let newVector = Math.sign(TARGET_POSITION - newPosition);
 
             if (newVector == 0 && newVector == 0) {        // завершение функции если обьект у цели и вектор нулевой
+                this.DOM.style.top = newPosition + 'px';
+                this.activPositioning = false;
                 return;
             }
 
@@ -136,6 +143,8 @@ function Cell(id, group, color = "red") {
             }
             else {
                 this.DOM.style.top = TARGET_POSITION + 'px';
+                this.activPositioning = false;
+                return;
             }
         }
         nexStep()
@@ -143,18 +152,30 @@ function Cell(id, group, color = "red") {
     this.moveToSelfPosition = () => {
         const moveToSelfPositionX = this.mapPosition[0] * this.listSize[0];
         const moveToSelfPositionY = this.mapPosition[1] * this.listSize[1];
-        // print(this.mapPosition)
-        this.moveToX(moveToSelfPositionX);
-        this.moveToY(moveToSelfPositionY);
+
+        this.moveToY(moveToSelfPositionY)
+
+        let clock = setInterval(()=>{
+            print(moveToSelfPositionY)
+            if (moveToSelfPositionY === parseInt(this.DOM.style.top)){
+                this.moveToX(moveToSelfPositionX);
+                clearTimeout(clock);
+            }
+        }, 1000)
     }
-
-
 
 }
 let cell_1 = new Cell('URT721L', 'UU2');
 let cell_2 = new Cell('URT722L', 'UU2');
-let cell_3 = new Cell('URT723L', 'UU2');
+let cell_3 = new Cell('URT723L', 'UU2', 'blue');
+let cell_4 = new Cell('URT724L', 'UU2', 'blue');
+let cell_5 = new Cell('URT725L', 'UU2');
+let cell_6 = new Cell('URT726L', 'UU2', 'green');
+let cell_7 = new Cell('URT727L', 'UU2', 'green');
 cell_1.moveToSelfPosition();
 cell_2.moveToSelfPosition();
 cell_3.moveToSelfPosition();
-// print(cell_2.mapPosition)
+cell_4.moveToSelfPosition();
+cell_5.moveToSelfPosition();
+cell_6.moveToSelfPosition();
+cell_7.moveToSelfPosition();
