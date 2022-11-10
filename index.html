@@ -14,13 +14,15 @@
         #conteiner{
             position: relative;
             box-sizing: content-box;
-            
+            background-color: rgba(255, 145, 1, 0.548);
+            background-clip: padding-box;
             width: 620px;
             height: 220px;
-            padding:10px;
+            padding:0px;
             top:100px;
             left:60px;
-            border: 5px dashed red;
+            border:  dashed rgba(4, 0, 255, 0.733);
+            border-width: 7px 0px 7px 7px;
         }
         #lodingArea{
             position: relative;
@@ -45,7 +47,6 @@
     <label><input type="number"> количество ячеек в ширину</label>
     <div id="zona">
         <div id="conteiner">
-            <div id="lodingArea"></div>
         </div>
     </div>
     <script src="script.js"></script>

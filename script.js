@@ -1,7 +1,7 @@
 const CELL_X = 150;
 const CELL_Y = 100;
-let lodingArea_X = 600;
-let lodingArea_Y = 200;
+let conteiner_X = 600;
+let conteiner_Y = 200;
 const PADDING = 10;
 
 let print = console.log;
@@ -16,11 +16,10 @@ let conteiner = {
     cellX: null,
     cellY: null,
     map: [],
-    lodingArea: document.getElementById('lodingArea'),
 
-    load_data(cellX, cellY, lodingArea_X, lodingArea_Y) {
-        this.width = lodingArea_X + PADDING * 2;
-        this.height = lodingArea_Y + PADDING * 2;
+    load_data(cellX, cellY, conteiner_X, conteiner_Y) {
+        this.width = conteiner_X;
+        this.height = conteiner_Y;
         this.cellX = cellX;
         this.cellY = cellY;
         this.n = Math.floor(this.width / this.cellX);
@@ -36,7 +35,8 @@ let conteiner = {
         }
     },
 }
-conteiner.load_data(CELL_X, CELL_Y, lodingArea_X, lodingArea_Y);
+conteiner.load_data(CELL_X, CELL_Y, conteiner_X, conteiner_Y);
+
 
 function Cell(id, group, listSize, parrentBox, color = "red",) {
     this.id = id;               //STRING
@@ -51,17 +51,47 @@ function Cell(id, group, listSize, parrentBox, color = "red",) {
     this.DOM.style.height = String(this.listSize[1]) + 'px';
     this.DOM.id = id;
     this.DOM.className = 'cell';
-    parrentBox.appendChild(this.DOM);
+    parrentBox.DOM.appendChild(this.DOM);
+    this.mapPosition = null;
+
+    print(this.parrentBox)
 
     this.create = () => {
-        print("create start");
-        this.DOM.style.left = '650px'
-
+        // print("create start");
+        this.DOM.style.left = '650px';
+        this.DOM.style.top = '0px';
+        for (let i = 0; i < this.parrentBox.n; i++) {
+            for (let j = 0; j < this.parrentBox.m; j++) {
+                if (this.parrentBox.map[i][j] === null && !this.mapPosition) {
+                    this.parrentBox.map[i][j] = this.id;
+                    this.mapPosition = [i, j]
+                }
+            }
+        }
     };
     this.create();
+    const STEP = 4;
+    this.move = (left, top) => {
+        let cellStyleLeft = parseInt(this.DOM.style.left);
+
+        if (left < cellStyleLeft) {
+            let newCellStyleLeft = parseInt(cellStyleLeft) - STEP;
+            if (newCellStyleLeft < 0) newCellStyleLeft = 0;
+            print(newCellStyleLeft)
+            this.DOM.style.left = newCellStyleLeft + 'px';
+            print(this.DOM.style.left)
+            if (left < newCellStyleLeft) {
+                setTimeout(this.move, 20, left, top);
+            }
+        }
+    }
+
+
 }
-let cell_1 = new Cell('URT725L', 'UU2', [CELL_X, CELL_Y], conteiner.lodingArea);
-print(cell_1);
-print(conteiner);
-print("1ыыы211")
+let cell_1 = new Cell('URT725L', 'UU2', [CELL_X, CELL_Y], conteiner);
+cell_1.move(0, 0);
+
+// print(cell_1);
+// print(conteiner);
+print(cell_1.listSize)
 
