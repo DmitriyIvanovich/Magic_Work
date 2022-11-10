@@ -54,7 +54,7 @@ function Cell(id, group, color = "red") {
     this.DOM.id = id;
     this.DOM.className = 'cell';
     this.parrentBox.DOM.appendChild(this.DOM);
-    this.mapPosition = null;
+    this.mapPosition = null;    //массив с двумя значениями, n и m 
 
     print(this.parrentBox)
 
@@ -76,7 +76,7 @@ function Cell(id, group, color = "red") {
 
     this.moveToCoordinats =(toX, toY) => {
         //координата определяется верхним левым углом прямоугольника "груз"
-        const STEP = 40;
+        const STEP = 4;
         const DELTA_TIME = 30; // задержка шага. влияет на частоту кадров
         const START_VECTOR = []; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = [toX, toY];
@@ -89,25 +89,23 @@ function Cell(id, group, color = "red") {
 
         START_VECTOR.push(Math.sign(TARGET_POSITION[0] - START_POSITION[0]), Math.sign(TARGET_POSITION[1] - START_POSITION[1]))
 
-        let nexStep = () => {
+        let nexStep = () => {   
+            //функция работает корректно тольно для перемещения обьекта вдоль одной оси! При переменщениях в разных направлениях будет скачок.
             let newPosition = [parseInt(this.DOM.style.left) + STEP * START_VECTOR[0], parseInt(this.DOM.style.top) + STEP * START_VECTOR[1]];
             let newVector = [Math.sign(TARGET_POSITION[0] - newPosition[0]), Math.sign(TARGET_POSITION[1] - newPosition[1])];
-            print("newVector: " + newVector)
-            print("START_VECTOR: " + START_VECTOR)
+            // print("newVector: " + newVector)
+            // print("START_VECTOR: " + START_VECTOR)
+
+            if (newVector[0] == 0 && newVector[1] == 0) {        // завершение функции если обьект у цели и вектор нулевой
+                return;
+            }
+
             if (newVector[0] == START_VECTOR[0] && newVector[1] == START_VECTOR[1]) {
-                print('$$$')
+                // print('$$$')
                 // print('newPosition: ' + newPosition)
                 this.DOM.style.left = newPosition[0] + 'px';
                 this.DOM.style.top = newPosition[1] + 'px';
-            }
-            print('$$$: ' + this.DOM.style.left);
-
-            newPosition = [parseInt(this.DOM.style.left) + STEP * START_VECTOR[0], parseInt(this.DOM.style.top) + STEP * START_VECTOR[1]];
-            newVector = [Math.sign(TARGET_POSITION[0] - newPosition[0]), Math.sign(TARGET_POSITION[1] - newPosition[1])];
-            print("newVector: " + newVector)
-            print("START_VECTOR: " + START_VECTOR)
-            if (newVector[0] == START_VECTOR[0] && newVector[1] == START_VECTOR[1]) {
-                setTimeout(nexStep, DELTA_TIME)
+                setTimeout(nexStep, DELTA_TIME);
             }
             else {
                 this.DOM.style.left = TARGET_POSITION[0] + 'px';
@@ -123,10 +121,22 @@ function Cell(id, group, color = "red") {
     this.moveToY = (to) => {
         this.moveToCoordinats(null, to);
     }
+    this.moveToSelfPosition = () =>{
+        const moveToSelfPositionX = this.mapPosition[0]*this.listSize[0];
+        const moveToSelfPositionY = this.mapPosition[1]*this.listSize[1];
+        // print(this.mapPosition)
+        this.moveToX(moveToSelfPositionX);
+        this.moveToY(moveToSelfPositionY);
+    }
 
 
 
 }
-let cell_1 = new Cell('URT725L', 'UU2');
-cell_1.moveToX(0);
+let cell_1 = new Cell('URT721L', 'UU2');
+let cell_2 = new Cell('URT722L', 'UU2');
+let cell_3 = new Cell('URT723L', 'UU2');
+cell_1.moveToSelfPosition();
+cell_2.moveToSelfPosition();
+cell_3.moveToSelfPosition();
+print(cell_2.mapPosition)
 
