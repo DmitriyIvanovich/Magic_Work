@@ -54,76 +54,95 @@ function Cell(id, group, color = "red") {
     this.DOM.id = id;
     this.DOM.className = 'cell';
     this.parrentBox.DOM.appendChild(this.DOM);
-    this.mapPosition = null;    //массив с двумя значениями, n и m 
+    this.mapPosition = [null, null];    //массив с двумя значениями, n и m 
 
-    print(this.parrentBox)
+    !function (elDOM) {
+        // установка элемента на стартовое значение
+        const START_POSITION_X = 650;
+        const START_POSITION_Y = 0;
+        elDOM.style.left = START_POSITION_X + 'px';
+        elDOM.style.top = START_POSITION_Y + 'px';
+    }(this.DOM);
 
-    this.create = () => {
-        this.DOM.style.left = '650px';
-        this.DOM.style.top = '0px';
-
-        for (let i = 0; i < this.parrentBox.n; i++) {
-            for (let j = 0; j < this.parrentBox.m; j++) {
-                if (this.parrentBox.map[i][j] === null && !this.mapPosition) {
-                    this.parrentBox.map[i][j] = this.id;
-                    this.mapPosition = [i, j]
+    !function (parrentBox, mapPosition, id) {
+        //определение начальной секции обьекта на карте
+        for (let i = 0; i < parrentBox.n; i++) {
+            for (let j = 0; j < parrentBox.m; j++) {
+                if (parrentBox.map[i][j] === null && (mapPosition[0] === null)) {
+                    parrentBox.map[i][j] = id;
+                    mapPosition[0] = i;
+                    mapPosition[1] = j;
                 }
             }
         }
-    };
-    this.create();
+    }(this.parrentBox, this.mapPosition, this.id);
 
-
-    this.moveToCoordinats =(toX, toY) => {
-        //координата определяется верхним левым углом прямоугольника "груз"
-        const STEP = 4;
+    this.moveToX = (to) => {
+        const STEP = 40;
         const DELTA_TIME = 30; // задержка шага. влияет на частоту кадров
-        const START_VECTOR = []; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
-        const TARGET_POSITION = [toX, toY];
-        const START_POSITION = [parseInt(this.DOM.style.left), parseInt(this.DOM.style.top)]
-
+        let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
+        const TARGET_POSITION = to;
+        const START_POSITION = parseInt(this.DOM.style.left)
         //проверка на отсутствие аргументов
-        if (toX === undefined || toX === null) TARGET_POSITION[0] = parseInt(this.DOM.style.left);
-        if (toY === undefined) TARGET_POSITION[1] = parseInt(this.DOM.style.top);
+        if (to === undefined || to === null) TARGET_POSITION = parseInt(this.DOM.style.left);
 
 
-        START_VECTOR.push(Math.sign(TARGET_POSITION[0] - START_POSITION[0]), Math.sign(TARGET_POSITION[1] - START_POSITION[1]))
+        START_VECTOR = Math.sign(TARGET_POSITION - START_POSITION);
 
-        let nexStep = () => {   
+        let nexStep = () => {
             //функция работает корректно тольно для перемещения обьекта вдоль одной оси! При переменщениях в разных направлениях будет скачок.
-            let newPosition = [parseInt(this.DOM.style.left) + STEP * START_VECTOR[0], parseInt(this.DOM.style.top) + STEP * START_VECTOR[1]];
-            let newVector = [Math.sign(TARGET_POSITION[0] - newPosition[0]), Math.sign(TARGET_POSITION[1] - newPosition[1])];
-            // print("newVector: " + newVector)
-            // print("START_VECTOR: " + START_VECTOR)
+            let newPosition = parseInt(this.DOM.style.left) + STEP * START_VECTOR;
+            let newVector = Math.sign(TARGET_POSITION - newPosition);
 
-            if (newVector[0] == 0 && newVector[1] == 0) {        // завершение функции если обьект у цели и вектор нулевой
+            if (newVector == 0 && newVector == 0) {        // завершение функции если обьект у цели и вектор нулевой
                 return;
             }
 
-            if (newVector[0] == START_VECTOR[0] && newVector[1] == START_VECTOR[1]) {
-                // print('$$$')
-                // print('newPosition: ' + newPosition)
-                this.DOM.style.left = newPosition[0] + 'px';
-                this.DOM.style.top = newPosition[1] + 'px';
+            if (newVector == START_VECTOR && newVector == START_VECTOR) {
+                this.DOM.style.left = newPosition + 'px';
                 setTimeout(nexStep, DELTA_TIME);
             }
             else {
-                this.DOM.style.left = TARGET_POSITION[0] + 'px';
-                this.DOM.style.top = TARGET_POSITION[1] + 'px';
+                this.DOM.style.left = TARGET_POSITION + 'px';
             }
-        };
-
+        }
         nexStep()
     };
-    this.moveToX = (to) => {
-        this.moveToCoordinats(to);
-    };
+
     this.moveToY = (to) => {
-        this.moveToCoordinats(null, to);
+        const STEP = 40;
+        const DELTA_TIME = 30; // задержка шага. влияет на частоту кадров
+        let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
+        const TARGET_POSITION = to;
+        const START_POSITION = parseInt(this.DOM.style.top)
+        //проверка на отсутствие аргументов
+        if (to === undefined || to === null) TARGET_POSITION = parseInt(this.DOM.style.top);
+
+
+        START_VECTOR = Math.sign(TARGET_POSITION - START_POSITION);
+
+        let nexStep = () => {
+            //функция работает корректно тольно для перемещения обьекта вдоль одной оси! При переменщениях в разных направлениях будет скачок.
+            let newPosition = parseInt(this.DOM.style.top) + STEP * START_VECTOR;
+            let newVector = Math.sign(TARGET_POSITION - newPosition);
+
+            if (newVector == 0 && newVector == 0) {        // завершение функции если обьект у цели и вектор нулевой
+                return;
+            }
+
+            if (newVector == START_VECTOR && newVector == START_VECTOR) {
+                this.DOM.style.top = newPosition + 'px';
+                setTimeout(nexStep, DELTA_TIME);
+            }
+            else {
+                this.DOM.style.top = TARGET_POSITION + 'px';
+            }
+        }
+        nexStep()
     }
-    this.moveToSelfPosition = () =>{
-        const moveToSelfPositionX = this.mapPosition[0]*this.listSize[0];
-        const moveToSelfPositionY = this.mapPosition[1]*this.listSize[1];
+    this.moveToSelfPosition = () => {
+        const moveToSelfPositionX = this.mapPosition[0] * this.listSize[0];
+        const moveToSelfPositionY = this.mapPosition[1] * this.listSize[1];
         // print(this.mapPosition)
         this.moveToX(moveToSelfPositionX);
         this.moveToY(moveToSelfPositionY);
@@ -138,5 +157,4 @@ let cell_3 = new Cell('URT723L', 'UU2');
 cell_1.moveToSelfPosition();
 cell_2.moveToSelfPosition();
 cell_3.moveToSelfPosition();
-print(cell_2.mapPosition)
-
+// print(cell_2.mapPosition)
