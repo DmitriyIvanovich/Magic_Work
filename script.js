@@ -60,6 +60,34 @@ function Cell(id, group, color = "red") {
     this.mapPosition = [null, null];    //массив с двумя значениями, n и m 
     this.activPositioning = false;
 
+    this.DOM.addEventListener('click', (event) => {
+        for (let element of CELL_LIST) {
+            if (element.DOM === event.target) {
+                element.pullOut();
+            }
+        }
+    })
+    this.pullOut = () => {
+        // print(this.mapPosition[0])
+        if (this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]] === null) {
+            print("fff")
+            const moveToSelfPositionX = (this.parrentBox.n + 0.2) * this.listSize[0];
+            this.moveToX(moveToSelfPositionX);
+            this.parrentBox.map[this.mapPosition[0]][this.mapPosition[1]] = null;
+            let clock = setInterval(() => {
+                if (this.activPositioning === false) {
+                    clearTimeout(clock)
+                    setTimeout(() => {
+                        this.delCell();
+                    }, 600);
+                }
+            }, 100)
+        }
+    }
+    this.delCell = () => {
+        this.DOM.remove();
+        CELL_LIST.splice(CELL_LIST.indexOf(this),1)
+    }
     !function (elDOM) {
         // установка элемента на стартовое значение
         const START_POSITION_X = 650;
@@ -82,6 +110,7 @@ function Cell(id, group, color = "red") {
     }(this.parrentBox, this.mapPosition, this.id);
 
     this.moveToX = (to) => {
+        //функция дает знать о перемещении тем, что изменяется состояние активности позиционирования обьекта
         this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = to;
@@ -157,7 +186,6 @@ function Cell(id, group, color = "red") {
         this.moveToY(moveToSelfPositionY)
 
         let clock = setInterval(() => {
-            // print(moveToSelfPositionY)
             if (moveToSelfPositionY === parseInt(this.DOM.style.top)) {
                 this.moveToX(moveToSelfPositionX);
                 clearTimeout(clock);
@@ -179,15 +207,12 @@ function createCells(amount) {
     for (let i = 0; i < amount; i++) {
         let cell = new Cell('URT' + String(Math.floor(Math.random() * 1000)), 'UU2', getRandomColor());
         cell.moveToSelfPosition();
-        CELL_LIST.push[cell]
+        CELL_LIST.push(cell)
     }
 }
 
-
-
-
 function main() {
-    createCells(3);
+    createCells(5);
 }
 
 main();
