@@ -87,6 +87,9 @@ function Cell(id, group, color = "red") {
     this.delCell = () => {
         this.DOM.remove();
         CELL_LIST.splice(CELL_LIST.indexOf(this),1)
+        if(CELL_LIST.length ===0){
+            alert("молодец!")
+        }
     }
     !function (elDOM) {
         // установка элемента на стартовое значение
@@ -179,7 +182,7 @@ function Cell(id, group, color = "red") {
         }
         nexStep()
     }
-    this.moveToSelfPosition = () => {
+    this.moveInConteiner = () => {
         const moveToSelfPositionX = this.mapPosition[0] * this.listSize[0];
         const moveToSelfPositionY = this.mapPosition[1] * this.listSize[1];
 
@@ -206,7 +209,7 @@ function createCells(amount) {
     //функция генерирует заданное колличество ячеек и записывает их в глобальный массив
     for (let i = 0; i < amount; i++) {
         let cell = new Cell('URT' + String(Math.floor(Math.random() * 1000)), 'UU2', getRandomColor());
-        cell.moveToSelfPosition();
+        cell.moveInConteiner();
         CELL_LIST.push(cell)
     }
 }
