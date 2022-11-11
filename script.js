@@ -68,50 +68,29 @@ function Cell(id, group, color = "red") {
             }
         }
     })
-    this.pullOut = () => {
-        let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
-        if (nextMamNPosition === null || nextMamNPosition === undefined) {
-            // print("fff")
-            const moveToSelfPositionX = (this.parrentBox.n + 0.2) * this.listSize[0];
-            this.moveToX(moveToSelfPositionX);
-            this.parrentBox.map[this.mapPosition[0]][this.mapPosition[1]] = null;
-            let clock = setInterval(() => {
-                if (this.activPositioning === false) {
-                    clearTimeout(clock)
-                    setTimeout(() => {
-                        this.delCell();
-                    }, 600);
-                }
-            }, 100)
-        }
-    }
-    this.delCell = () => {
-        this.DOM.remove();
-        CELL_LIST.splice(CELL_LIST.indexOf(this),1)
-        if(CELL_LIST.length ===0){
-            alert("молодец!")
-        }
-    }
+
     !function (elDOM) {
         // установка элемента на стартовое значение
-        const START_POSITION_X = 650;
+        const START_POSITION_X = conteiner_X + 50;
         const START_POSITION_Y = 0;
         elDOM.style.left = START_POSITION_X + 'px';
         elDOM.style.top = START_POSITION_Y + 'px';
     }(this.DOM);
 
-    !function (parrentBox, mapPosition, id) {
+    !function (parrentBox, mapPosition, self) {
         //определение начальной секции обьекта на карте
         for (let i = 0; i < parrentBox.n; i++) {
             for (let j = 0; j < parrentBox.m; j++) {
                 if (parrentBox.map[i][j] === null && (mapPosition[0] === null)) {
-                    parrentBox.map[i][j] = id;
+                    parrentBox.map[i][j] = self;
                     mapPosition[0] = i;
                     mapPosition[1] = j;
                 }
             }
         }
-    }(this.parrentBox, this.mapPosition, this.id);
+    }(this.parrentBox, this.mapPosition, this);
+
+
 
     this.moveToX = (to) => {
         //функция дает знать о перемещении тем, что изменяется состояние активности позиционирования обьекта
@@ -185,7 +164,7 @@ function Cell(id, group, color = "red") {
     }
     this.moveInConteiner = () => {
         const moveToSelfPositionX = this.mapPosition[0] * this.listSize[0];
-        const moveToSelfPositionY = this.mapPosition[1] * this.listSize[1];
+        const moveToSelfPositionY = conteiner_Y - SIZE_CELL_Y - this.mapPosition[1] * this.listSize[1];
 
         this.moveToY(moveToSelfPositionY)
 
@@ -196,7 +175,45 @@ function Cell(id, group, color = "red") {
             }
         }, 1000)
     }
-
+    this.pullOut = () => {
+        let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
+        if (nextMamNPosition === null || nextMamNPosition === undefined) {
+            // print("fff")
+            const moveToSelfPositionX = (this.parrentBox.n + 0.2) * this.listSize[0];
+            this.moveToX(moveToSelfPositionX);
+            this.parrentBox.map[this.mapPosition[0]][this.mapPosition[1]] = null;
+            let clock = setInterval(() => {
+                if (this.activPositioning === false) {
+                    clearTimeout(clock)
+                    setTimeout(() => {
+                        this.delCell();
+                    }, 600);
+                }
+            }, 100)
+        }
+        else{
+            let DataListRowWithVoidCection;
+            let NumberRowWithVoidCextion;
+            let parrentMapList = this.parrentBox.map
+            for (let i = 0; i < parrentMapList.length;i++){
+                for (let j = 0; j < parrentMapList[i].length;j++){
+                    if (parrentMapList[i][j] === null && DataListRowWithVoidCection === undefined){
+                        NumberRowWithVoidCextion=i;
+                        DataListRowWithVoidCection = parrentMapList[i]
+                        print( DataListRowWithVoidCection)
+                        print(NumberRowWithVoidCextion)
+                    }
+                }
+            }
+        }
+    }
+    this.delCell = () => {
+        this.DOM.remove();
+        CELL_LIST.splice(CELL_LIST.indexOf(this), 1)
+        if (CELL_LIST.length === 0) {
+            alert("молодец!")
+        }
+    }
 }
 
 function getRandomColor() {
