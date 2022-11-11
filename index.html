@@ -21,7 +21,7 @@
             padding:0px;
             top:100px;
             left:60px;
-            border:  dashed rgba(4, 0, 255, 0.733);
+            border:  solid rgba(255, 255, 255, 0.733);
             border-width: 7px 0px 7px 7px;
         }
         #lodingArea{
@@ -38,6 +38,16 @@
             top: 0px;
             font-size: 30px;
             text-align: center;
+            outline: 3px solid rgba(0, 0, 0, 0.253);
+            outline-offset: -3px;
+        }
+        .cell:hover{
+            outline: 10px solid rgba(0, 0, 0, 0.226);
+            outline-offset: -10px; /* Выводим рамку внутри элемента */
+        }
+        label{
+            margin-top: 10px;
+            display: block;
         }
     </style>
 </head>

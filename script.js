@@ -1,8 +1,11 @@
-const SIZE_CELL_X = 150;
-const SIZE_CELL_Y = 100;
-let conteiner_X = 600;
-let conteiner_Y = 200;
-const PADDING = 10;
+const SIZE_CELL_X = 150;    //размер груза
+const SIZE_CELL_Y = 100;    //размер груза
+let conteiner_X = 600;      //размер контейнера
+let conteiner_Y = 200;      //размер контейнера
+const STEP = 25;        //шаг перемещения груза в контейнере
+const DELTA_TIME = 30;  // задержка шага. влияет на частоту кадров при перемещении груза
+
+const CELL_LIST = [];   //список из обьектов Cell т.е. грузов
 
 let print = console.log;
 
@@ -78,8 +81,6 @@ function Cell(id, group, color = "red") {
         }
     }(this.parrentBox, this.mapPosition, this.id);
 
-    const STEP = 25;
-    const DELTA_TIME = 30;  // задержка шага. влияет на частоту кадров
     this.moveToX = (to) => {
         this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
@@ -97,7 +98,7 @@ function Cell(id, group, color = "red") {
             let newVector = Math.sign(TARGET_POSITION - newPosition);
 
             if (newVector == 0 && newVector == 0) {  // завершение функции если обьект у цели и вектор нулевой
-                this.DOM.style.left = newPosition + 'px';      
+                this.DOM.style.left = newPosition + 'px';
                 this.activPositioning = false;
                 return;
             }
@@ -155,9 +156,9 @@ function Cell(id, group, color = "red") {
 
         this.moveToY(moveToSelfPositionY)
 
-        let clock = setInterval(()=>{
-            print(moveToSelfPositionY)
-            if (moveToSelfPositionY === parseInt(this.DOM.style.top)){
+        let clock = setInterval(() => {
+            // print(moveToSelfPositionY)
+            if (moveToSelfPositionY === parseInt(this.DOM.style.top)) {
                 this.moveToX(moveToSelfPositionX);
                 clearTimeout(clock);
             }
@@ -165,17 +166,28 @@ function Cell(id, group, color = "red") {
     }
 
 }
-let cell_1 = new Cell('URT721L', 'UU2');
-let cell_2 = new Cell('URT722L', 'UU2');
-let cell_3 = new Cell('URT723L', 'UU2', 'blue');
-let cell_4 = new Cell('URT724L', 'UU2', 'blue');
-let cell_5 = new Cell('URT725L', 'UU2');
-let cell_6 = new Cell('URT726L', 'UU2', 'green');
-let cell_7 = new Cell('URT727L', 'UU2', 'green');
-cell_1.moveToSelfPosition();
-cell_2.moveToSelfPosition();
-cell_3.moveToSelfPosition();
-cell_4.moveToSelfPosition();
-cell_5.moveToSelfPosition();
-cell_6.moveToSelfPosition();
-cell_7.moveToSelfPosition();
+
+function getRandomColor() {
+    const CELL_COLOR = ['red', 'yellow', 'grey', 'green'];
+    let collor = CELL_COLOR[Math.floor(Math.random() * CELL_COLOR.length)];
+    // print(collor)
+    return collor;
+}
+
+function createCells(amount) {
+    //функция генерирует заданное колличество ячеек и записывает их в глобальный массив
+    for (let i = 0; i < amount; i++) {
+        let cell = new Cell('URT' + String(Math.floor(Math.random() * 1000)), 'UU2', getRandomColor());
+        cell.moveToSelfPosition();
+        CELL_LIST.push[cell]
+    }
+}
+
+
+
+
+function main() {
+    createCells(3);
+}
+
+main();
