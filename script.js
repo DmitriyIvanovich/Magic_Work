@@ -35,7 +35,8 @@ const conteiner = {
             }
             this.map.push(mapM);
             mapM = [];
-        }
+        } this.map.push([undefined, undefined])
+
     },
 }
 // print(conteiner)
@@ -68,9 +69,9 @@ function Cell(id, group, color = "red") {
         }
     })
     this.pullOut = () => {
-        // print(this.mapPosition[0])
-        if (this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]] === null) {
-            print("fff")
+        let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
+        if (nextMamNPosition === null || nextMamNPosition === undefined) {
+            // print("fff")
             const moveToSelfPositionX = (this.parrentBox.n + 0.2) * this.listSize[0];
             this.moveToX(moveToSelfPositionX);
             this.parrentBox.map[this.mapPosition[0]][this.mapPosition[1]] = null;
@@ -215,7 +216,7 @@ function createCells(amount) {
 }
 
 function main() {
-    createCells(5);
+    createCells(7);
 }
 
 main();
