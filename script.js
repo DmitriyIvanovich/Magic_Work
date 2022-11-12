@@ -78,7 +78,7 @@ function Cell(id, group, color = "red") {
         let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
         if (nextMamNPosition !== null && nextMamNPosition !== undefined){
             print(1)
-            let phrases=["Этот груз ты не можешь переместить!", "Серега, спину сломаешь!!!", "Неа", "Чуть правее"];
+            let phrases=["Этот груз ты не можешь переместить!", "Серега, спину сломаешь!!!", "Неа", "Чуть правее", "Не сможешь сдвинуть!"];
             let phrase = phrases[Math.floor(Math.random() * phrases.length)];
             domComent.innerText=phrase;
         }
