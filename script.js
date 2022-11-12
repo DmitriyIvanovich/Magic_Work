@@ -19,6 +19,7 @@ const conteiner = {
     cellX: null,
     cellY: null,
     map: [],
+    cargoPositioningActive: false,
 
     load_data(cellX, cellY, conteiner_X, conteiner_Y) {
         this.width = conteiner_X;
@@ -62,9 +63,12 @@ function Cell(id, group, color = "red") {
     this.activPositioning = false;
 
     this.DOM.addEventListener('click', (event) => {
-        for (let element of CELL_LIST) {
-            if (element.DOM === event.target) {
-                element.pullOut();
+        if (!conteiner.cargoPositioningActive) {
+            print(conteiner.cargoPositioningActive)
+            for (let element of CELL_LIST) {
+                if (element.DOM === event.target) {
+                    element.pullOut();
+                }
             }
         }
     })
@@ -94,7 +98,6 @@ function Cell(id, group, color = "red") {
 
     this.moveToX = (to) => {
         //функция дает знать о перемещении тем, что изменяется состояние активности позиционирования обьекта
-        this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = to;
         const START_POSITION = parseInt(this.DOM.style.left)
@@ -129,7 +132,6 @@ function Cell(id, group, color = "red") {
     };
 
     this.moveToY = (to) => {
-        this.activPositioning = true;
         let START_VECTOR; // хранит начальное направление к цели. Если в ходе направление сменится, значит обьект прошел цель
         const TARGET_POSITION = to;
         const START_POSITION = parseInt(this.DOM.style.top)
@@ -161,46 +163,80 @@ function Cell(id, group, color = "red") {
             }
         }
         nexStep()
-    }
-    this.moveInConteiner = () => {
-        const moveToSelfPositionX = this.mapPosition[0] * this.listSize[0];
-        const moveToSelfPositionY = conteiner_Y - SIZE_CELL_Y - this.mapPosition[1] * this.listSize[1];
+    };
+    this.moveToCection = (toX, toY) => {
+        //перемещение происходит спеерва по оси У а потом по Х!!!
+        this.activPositioning = true;
+        const moveToPositionX = toX * this.listSize[0];
+        const moveToPositionY = conteiner_Y - SIZE_CELL_Y - toY * this.listSize[1];
 
-        this.moveToY(moveToSelfPositionY)
-
-        let clock = setInterval(() => {
-            if (moveToSelfPositionY === parseInt(this.DOM.style.top)) {
-                this.moveToX(moveToSelfPositionX);
-                clearTimeout(clock);
+        this.moveToY(moveToPositionY)
+        let clock1 = setInterval(() => {
+            if (moveToPositionY === parseInt(this.DOM.style.top)) {
+                this.moveToX(moveToPositionX);
+                clearTimeout(clock1);
             }
-        }, 1000)
+        }, 20)
+        let clock2 = setInterval(() => {
+            if (moveToPositionX === parseInt(this.DOM.style.left)) {
+                clearTimeout(clock2);
+                this.actionsAfterMovement();
+            }
+        }, 20)
+    }
+    this.actionsAfterMovement = () => {
+        //действия, которые выполняются после завершения движения ячеек
+        let cellsmoveActive;
+        for (let el of CELL_LIST) {
+            if (el.activPositioning === true) {
+                cellsmoveActive = true;
+                break;
+            }
+        }
+        if (!cellsmoveActive){
+            conteiner.cargoPositioningActive = false;
+        }
+    }
+    this.moveToCectionX = (to) => {
+        this.moveToCection(to, this.mapPosition[1])
+    }
+    this.moveToCectionY = (to) => {
+        this.moveToCection(this.mapPosition[1], to)
+    }
+
+    this.moveInConteiner = () => {
+        conteiner.cargoPositioningActive = true;
+        setTimeout(() => {
+            const homeXPosition = this.mapPosition[0];
+            const homeYPosition = this.mapPosition[1];
+            this.moveToCection(homeXPosition, homeYPosition);
+        }, 700)
     }
     this.pullOut = () => {
         let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
         if (nextMamNPosition === null || nextMamNPosition === undefined) {
             // print("fff")
-            const moveToSelfPositionX = (this.parrentBox.n + 0.2) * this.listSize[0];
-            this.moveToX(moveToSelfPositionX);
+            this.moveToCectionX(this.parrentBox.n + 0.2);
             this.parrentBox.map[this.mapPosition[0]][this.mapPosition[1]] = null;
             let clock = setInterval(() => {
                 if (this.activPositioning === false) {
                     clearTimeout(clock)
                     setTimeout(() => {
                         this.delCell();
-                    }, 600);
+                    }, 700);
                 }
             }, 100)
         }
-        else{
+        else {
             let DataListRowWithVoidCection;
             let NumberRowWithVoidCextion;
             let parrentMapList = this.parrentBox.map
-            for (let i = 0; i < parrentMapList.length;i++){
-                for (let j = 0; j < parrentMapList[i].length;j++){
-                    if (parrentMapList[i][j] === null && DataListRowWithVoidCection === undefined){
-                        NumberRowWithVoidCextion=i;
+            for (let i = 0; i < parrentMapList.length; i++) {
+                for (let j = 0; j < parrentMapList[i].length; j++) {
+                    if (parrentMapList[i][j] === null && DataListRowWithVoidCection === undefined) {
+                        NumberRowWithVoidCextion = i;
                         DataListRowWithVoidCection = parrentMapList[i]
-                        print( DataListRowWithVoidCection)
+                        print(DataListRowWithVoidCection)
                         print(NumberRowWithVoidCextion)
                     }
                 }
