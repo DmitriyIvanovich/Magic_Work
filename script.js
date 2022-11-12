@@ -64,15 +64,28 @@ function Cell(id, group, color = "red") {
 
     this.DOM.addEventListener('click', (event) => {
         if (!conteiner.cargoPositioningActive) {
-            print(conteiner.cargoPositioningActive)
+            // print(conteiner.cargoPositioningActive)
             for (let element of CELL_LIST) {
                 if (element.DOM === event.target) {
                     element.pullOut();
+                    this.fun();
                 }
             }
         }
     })
-
+    this.fun = () => {
+        let domComent = document.getElementById('coment');
+        let nextMamNPosition = this.parrentBox.map[this.mapPosition[0] + 1][this.mapPosition[1]];
+        if (nextMamNPosition !== null && nextMamNPosition !== undefined){
+            print(1)
+            let phrases=["Этот груз ты не можешь переместить!", "Серега, спину сломаешь!!!", "Неа", "Чуть правее"];
+            let phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            domComent.innerText=phrase;
+        }
+        else{
+            domComent.innerText = '';  
+        }
+    }
     !function (elDOM) {
         // установка элемента на стартовое значение
         const START_POSITION_X = conteiner_X + 50;
@@ -236,8 +249,8 @@ function Cell(id, group, color = "red") {
                     if (parrentMapList[i][j] === null && DataListRowWithVoidCection === undefined) {
                         NumberRowWithVoidCextion = i;
                         DataListRowWithVoidCection = parrentMapList[i]
-                        print(DataListRowWithVoidCection)
-                        print(NumberRowWithVoidCextion)
+                        // print(DataListRowWithVoidCection)
+                        // print(NumberRowWithVoidCextion)
                     }
                 }
             }

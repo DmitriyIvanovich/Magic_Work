@@ -6,7 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        body{
+            background-color: black;
+            color:white;
+        }
+        p{
+            position: relative;
+            margin-top:40px;
+            margin-left: 60px;
+            font-size: 25px;
+        }
         #zona{
+            padding: 20px;
             margin-top: 50px;
             height: 500px;
             background-color: grey;
@@ -19,7 +30,7 @@
             width: 620px;
             height: 200px;
             padding:0px;
-            top:100px;
+            margin-top:80px;
             left:60px;
             border:  solid rgba(255, 255, 255, 0.733);
             border-width: 7px 0px 7px 7px;
@@ -56,8 +67,8 @@
     <!-- <label><input type="number"> количество ячеек в длину</label>
     <label><input type="number"> количество ячеек в ширину</label> -->
     <div id="zona">
-        <div id="conteiner">
-        </div>
+        <div id="conteiner"></div>
+        <p id="coment"></p>
     </div>
     <script src="script.js"></script>
 </body>
